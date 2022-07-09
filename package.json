@@ -13,7 +13,8 @@
     "build:css": "autoprefixer < src/main.css | uglifycss src/main.css > ./build/main.css",
     "build:assets": "shx cp -R src/assets/ ./build/assets/",
     "build": "npm run build:html && npm run build:js && npm run build:css && npm run build:assets",
-    "upload": "npm run build && ./upload.sh",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "open": "open http://localhost:8888"
   },
   "browserslist": [
@@ -47,6 +48,7 @@
   "dependencies": {
     "@newswire/sheet-to-data": "^1.0.0",
     "axios": "^0.27.2",
+    "gh-pages": "^4.0.0",
     "googleapis": "^105.0.0",
     "simple-datatables": "^3.2.0"
   }
