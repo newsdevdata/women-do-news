@@ -47,6 +47,7 @@
   "dependencies": {
     "@newswire/sheet-to-data": "^1.0.0",
     "axios": "^0.27.2",
-    "googleapis": "^105.0.0"
+    "googleapis": "^105.0.0",
+    "simple-datatables": "^3.2.0"
   }
 }

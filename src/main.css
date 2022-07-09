@@ -1,35 +1,54 @@
-/* See the documentation for how to load in regular weight versions */
-@font-face {
-	font-family: 'Benton';
-	src: url('https://apps.bostonglobe.com/common/font/benton-bold.woff2') format('woff2'), url('https://apps.bostonglobe.com/common/font/benton-bold.woff') format('woff');
-    font-weight: 600;
+.source-and-credit {
+  clear: both;
+  width: 100%;
+  overflow: hidden;
+  margin-top: 1em;
 }
-
-@font-face {
-	font-family: 'Miller';
-	src: url('https://apps.bostonglobe.com/common/font/miller-bold.woff2') format('woff2'), url('https://apps.bostonglobe.com/common/font/miller-bold.woff') format('woff');
-    font-weight: 600;
+.source-and-credit p {
+  line-height: 1.6;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  text-align: left;
+  float: none;
 }
-
-/* =========================== */
-/* Globe font stack examples
-/* =========================== */
-
-/* Serif (Miller) */
-/* font-family: 'Miller', Georgia, Times New Roman, Times, serif; */
-/* font-weight: 600; */
-
-/* Sans-serif (Benton) */
-/* font-family: 'Benton', Helvetica, Arial, sans-serif; */
-/* font-weight: 600; */
-
-/* Serif */
-/* font-family: 'Georgia', Times New Roman, Times, serif; */
-
-/* Sans-serif */
-/* font-family: 'Helvetica', Arial, sans-serif; */
-
-/* =========================== */
-/* Graphic styles
-/* =========================== */
-
+.source-and-credit .source span {
+  font-weight: normal;
+}
+@media only screen and (min-width: 40em) {
+  .source-and-credit .source span {
+    float: left;
+  }
+}
+.source-and-credit .credit span {
+  text-transform: uppercase;
+}
+@media only screen and (min-width: 40em) {
+  .source-and-credit .credit span {
+    text-align: right;
+    float: right;
+  }
+}
+.graphic__text {
+  margin: 0.5rem 0;
+}
+.graphic__text--hed {
+  font-weight: bold;
+}
+@media only screen and (min-width: 40em) {
+  .graphic__text--hed {
+    font-size: 1.1rem;
+  }
+}
+.graphic__text--subhed {
+  font-size: 0.9rem;
+}
+@media only screen and (min-width: 40em) {
+  .graphic__text--subhed {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+.graphic__text .table__container {
+  font-family: Helvetica;
+}

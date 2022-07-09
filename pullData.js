@@ -25,6 +25,26 @@ function zipObject(keys, values) {
   return result;
 }
 
+function selectData(json) {
+  const reqKeys = ['Enter name Wikipedia article - DO NOT REORDER', 'Claimed by', 'Link to edit', 'needs article?', 'needs edit?', 'Needs more independent citations (mark TRUE)', 'Needs headshot (mark TRUE)'];
+
+  const renamedKeys = ['Name of journalist', 'Claimed by', 'Link to edit', 'Needs article', 'Needs edit', 'Needs citation', 'Needs photo'];
+
+  const selectedJson = [];
+
+  json.forEach(r => {
+    let obj = {}
+
+    reqKeys.forEach((k, i) => {
+      obj[renamedKeys[i]] = r[k];
+    });
+
+    selectedJson.push(obj);
+  });
+
+  return selectedJson;
+}
+
 async function main() {
   // this method looks for the GCLOUD_PROJECT and GOOGLE_APPLICATION_CREDENTIALS
   // environment variables to establish authentication
@@ -49,10 +69,10 @@ async function main() {
 
     const rows = results.data.values;
     const headers = rows[0];
-    const data = rows.slice(1)
-      .map(values => zipObject(headers, values));
+    const data = selectData(rows.slice(1)
+      .map(values => zipObject(headers, values)));
 
-    const fp = 'src/dev/assets/' + outFileNames[i];
+    const fp = 'src/assets/' + outFileNames[i];
 
     fs.writeFileSync(fp, JSON.stringify({ data }));
   }

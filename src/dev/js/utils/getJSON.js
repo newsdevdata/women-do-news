@@ -1,3 +1,4 @@
+/* eslint-disable */
 const getJSON = (url, callback) => {
   const request = new XMLHttpRequest();
   request.open('GET', url, true);
