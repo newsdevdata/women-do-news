@@ -7,7 +7,8 @@ const keyFile = 'key.json';
 const spreadsheetId = [
   '1ovvSRIWi8ohQBZxDC-1770sF0aKfZ5M3R9yuhcjs04o',
 ];
-const ranges = ['Articles data!A1:AB'];
+// const ranges = ['Assignments!B2:C'];
+const ranges = ['Articles data!A1:AB']
 const outFileNames = ['data.json'];
 
 // https://github.com/rdmurphy/sheet-to-data/blob/master/index.js
@@ -26,9 +27,9 @@ function zipObject(keys, values) {
 }
 
 function selectData(json) {
-  const reqKeys = ['Enter name Wikipedia article - DO NOT REORDER', 'Claimed by', 'Link to edit', 'needs article?', 'needs edit?', 'Needs more independent citations (mark TRUE)', 'Needs headshot (mark TRUE)'];
+  const reqKeys = ['Enter name Wikipedia article - DO NOT REORDER', 'Claimed by', 'Link to edit', 'needs article?', 'needs edit?', 'Needs more independent citations (mark TRUE)', 'Needs headshot (mark TRUE)', 'ORES rating', 'link'];
 
-  const renamedKeys = ['Name of journalist', 'Claimed by', 'Link to edit', 'Needs article', 'Needs edit', 'Needs citation', 'Needs photo'];
+  const renamedKeys = ['Name of journalist', 'Claimed by', 'Link to edit', 'Needs article', 'Needs edit', 'Needs citation', 'Needs photo', 'rating', 'link'];
 
   const selectedJson = [];
 
@@ -43,6 +44,34 @@ function selectData(json) {
   });
 
   return selectedJson;
+}
+
+function reshapeData(rows) {
+  rows.forEach(d => {
+    d.Name = d['Name of journalist'];
+    d.link = d['Link to edit'];
+
+    if(d['Needs citation'] == 'TRUE') {
+      d.Status = 'Needs citations'
+    } else if (d['Needs article'] == 'TRUE') {
+      d.Status = 'Needs biography';
+    } else if (d['Needs edit']) {
+      d.Status = 'Needs edit';
+    } else if (d['Needs photo']) {
+      d.Status = 'Complete!';
+    }
+  });
+
+  const keysToKeep = ['Name', 'link', 'Status'];
+
+  const r = rows.map(o => keysToKeep.reduce((acc, curr) => {
+    acc[curr] = o[curr];
+    return acc;
+  }, {}));
+
+  console.log(r);
+
+  return r;
 }
 
 async function main() {
@@ -67,13 +96,18 @@ async function main() {
       range: ranges[i],
     });
 
+    // console.log(results)
+
     const rows = results.data.values;
     const headers = rows[0];
-    const data = selectData(rows.slice(1)
+
+    let data = selectData(rows.slice(1)
       .map(values => zipObject(headers, values)));
 
-    const fp = 'src/assets/' + outFileNames[i];
+    data = reshapeData(data)
 
+    const fp = 'src/assets/' + outFileNames[i];
+    // console.log(rows[0])
     fs.writeFileSync(fp, JSON.stringify({ data }));
   }
 }
