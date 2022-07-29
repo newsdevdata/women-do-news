@@ -76,6 +76,7 @@ function displayTable(err, res) {
           'font-family': "'Montserrat', Helvetica, sans-serif !important",
           'border': '1px solid rgba(226, 226, 223, 1)',
           'padding': '1em',
+          'border-radius': '5px',
         }
       }
       // className: {
