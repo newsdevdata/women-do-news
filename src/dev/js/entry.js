@@ -70,13 +70,24 @@ function displayTable(err, res) {
       data: obj.data,
       pagination: true,
       search: true,
-      className: {
-        td: 'my-custom-td-class',
-        table: 'custom-table-classname'
+      sort: true,
+      style: {
+        container: {
+          'font-family': "'Montserrat', Helvetica, sans-serif !important",
+          'border': '1px solid rgba(226, 226, 223, 1)',
+          'padding': '1em',
+        }
       }
+      // className: {
+      //   td: 'my-custom-td-class',
+      //   table: 'custom-table-classname'
+      // }
     })
 
     grid.render(table);
+
+    const search = select('.gridjs-search-input');
+    search.placeholder = 'Search for a name...';
 
     const lookup = {
       'citation': 'Needs citations',
