@@ -38,7 +38,7 @@
       -->
 
       <div class="graphic__text">
-        <h1 class="graphic__text--hed">Articles needed</h1>
+        <h1 class="graphic__text--hed">Assignments status</h1>
         <h3 class="graphic__text--subhed"></h3>
 
         <!-- Legend if you want it -->
@@ -53,17 +53,26 @@
           <span class="legend-text">Legend text 4</span>
         </div> -->
 
-        <select class="table-filter">
-          <option value="all">All</option>
-          <option value="citation">Needs citation</option>
-          <option value="article">Needs biography</option>
-          <option value="edit">Needs edit</option>
-          <option value="image">Needs image</option>
-          <option value="complete">Complete</option>
-        </select>
+
+        <div class="options">
+          <div class="options__text options-child">
+            <h4>Pick a status</h4>
+          </div>
+
+          <div class="options__list  options-child">
+            <select class="table-filter">
+              <option value="all">All</option>
+              <option value="citation">Needs citation</option>
+              <option value="article">Needs biography</option>
+              <option value="edit">Needs edit</option>
+              <option value="image">Needs image</option>
+              <option value="complete">Complete</option>
+            </select>
+          </div>
+        </div>
 
         <div class="table__container">
-          <table id="my-table"></table>
+          <div id="my-table"></div>
         </div>
       </div>
 
