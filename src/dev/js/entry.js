@@ -17,6 +17,16 @@ const renderLink = (_, row) => {
   console.log(row);
 }
 
+const renderTag = (cell) => {
+  console.log(cell);
+
+  const c = cell.toLowerCase()
+    .replace(' ', '-')
+    .replace('!', '');
+
+  return html(`<span class='need-tag ${c}'>${cell}</span>`);
+}
+
 function displayTable(err, res) {
   if (err) {
     throw err;
@@ -45,13 +55,17 @@ function displayTable(err, res) {
       columns: [
         {
           name: 'Name',
-          formatter: (_, row) => html(`<a href=${row.cells[1].data} target='_blank' rel='noopener noreferrer'>${row.cells[0].data}</a>`)
+          formatter: (_, row) => html(`<a class='journo-name' href=${row.cells[1].data} target='_blank' rel='noopener noreferrer'>${row.cells[0].data}</a>`)
         },
         {
           name: 'link',
           hidden: true
         },
-        'Status'
+        {
+          name: 'Status',
+          formatter: (cell) => renderTag(cell),
+        },
+        // 'Status'
       ],
       data: obj.data,
       pagination: true,
@@ -63,13 +77,6 @@ function displayTable(err, res) {
     })
 
     grid.render(table);
-
-    // new simpleDatatables.DataTable(table, { // eslint-disable-line no-new
-    //   data: obj,
-    //   columns: [
-    //     { select: 2, render: renderLink },
-    //   ]
-    // });
 
     const lookup = {
       'citation': 'Needs citations',

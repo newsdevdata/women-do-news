@@ -5,7 +5,7 @@
 // @require 'base/reset'
 @require 'base/variables'
 @require 'base/helpers'
-// @require 'base/colors'
+@require 'base/colors'
 // @require 'base/layout'
 // @require 'base/unicode'
 @require 'base/fonts'
@@ -79,6 +79,31 @@
 
 #my-table
   font-family 'Montserrat', Helvetica, sans-serif !important
+
+  .journo-name
+    font-weight bold
+
+  .need-tag
+    padding 5px
+    border-radius 5px
+    background-opacity .8
+
+    &.needs-citations
+      background-color lighten(#AE0F24, 20)
+      color #fafafa
+
+    &.needs-biography
+      background-color $canary
+      color #303030
+
+    &.needs-edit
+      background-color #ffc4c4
+
+    &.needs-image
+      background-color $lilac
+
+    &.complete
+      background-color $celery
 
   .gridjs-summary
     margin-right 10px

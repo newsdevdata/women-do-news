@@ -95,6 +95,14 @@ var renderLink = function renderLink(_, row) {
   console.log(row);
 };
 
+var renderTag = function renderTag(cell) {
+  console.log(cell);
+
+  var c = cell.toLowerCase().replace(' ', '-').replace('!', '');
+
+  return (0, _gridjs.html)('<span class=\'need-tag ' + c + '\'>' + cell + '</span>');
+};
+
 function displayTable(err, res) {
   if (err) {
     throw err;
@@ -126,12 +134,17 @@ function displayTable(err, res) {
       columns: [{
         name: 'Name',
         formatter: function formatter(_, row) {
-          return (0, _gridjs.html)('<a href=' + row.cells[1].data + ' target=\'_blank\' rel=\'noopener noreferrer\'>' + row.cells[0].data + '</a>');
+          return (0, _gridjs.html)('<a class=\'journo-name\' href=' + row.cells[1].data + ' target=\'_blank\' rel=\'noopener noreferrer\'>' + row.cells[0].data + '</a>');
         }
       }, {
         name: 'link',
         hidden: true
-      }, 'Status'],
+      }, {
+        name: 'Status',
+        formatter: function formatter(cell) {
+          return renderTag(cell);
+        }
+      }],
       data: obj.data,
       pagination: true,
       search: true,
@@ -142,13 +155,6 @@ function displayTable(err, res) {
     });
 
     grid.render(table);
-
-    // new simpleDatatables.DataTable(table, { // eslint-disable-line no-new
-    //   data: obj,
-    //   columns: [
-    //     { select: 2, render: renderLink },
-    //   ]
-    // });
 
     var lookup = {
       'citation': 'Needs citations',
