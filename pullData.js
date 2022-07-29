@@ -55,9 +55,11 @@ function reshapeData(rows) {
       d.Status = 'Needs citations'
     } else if (d['Needs article'] == 'TRUE') {
       d.Status = 'Needs biography';
-    } else if (d['Needs edit']) {
+    } else if (d['Needs edit'] == 'TRUE') {
       d.Status = 'Needs edit';
-    } else if (d['Needs photo']) {
+    } else if (d['Needs photo'] == 'TRUE') {
+      d.Status = 'Needs image';
+    } else {
       d.Status = 'Complete!';
     }
   });
@@ -69,7 +71,7 @@ function reshapeData(rows) {
     return acc;
   }, {}));
 
-  console.log(r);
+  // console.log(r);
 
   return r;
 }

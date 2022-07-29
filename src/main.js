@@ -102,9 +102,8 @@ function displayTable(err, res) {
     var data = res.data;
 
 
-    console.log('res', res);
-
     var table = (0, _dom.select)('#my-table');
+    var filter = (0, _dom.select)('.table-filter');
 
     var tableKeys = ['Name', 'link', 'Status'];
     var tableHeaders = ['Journalist', 'Next step'];
@@ -121,7 +120,7 @@ function displayTable(err, res) {
       obj.data.push(outRow);
     });
 
-    console.log(obj.data[1]);
+    // console.log(obj.data[1]);
 
     var grid = new _gridjs.Grid({
       columns: [{
@@ -132,15 +131,14 @@ function displayTable(err, res) {
       }, {
         name: 'link',
         hidden: true
-      }, {
-        name: 'Status',
-        formatter: function formatter(cell) {
-          return cell;
-        }
-      }],
+      }, 'Status'],
       data: obj.data,
       pagination: true,
-      search: true
+      search: true,
+      className: {
+        td: 'my-custom-td-class',
+        table: 'custom-table-classname'
+      }
     });
 
     grid.render(table);
@@ -151,6 +149,32 @@ function displayTable(err, res) {
     //     { select: 2, render: renderLink },
     //   ]
     // });
+
+    var lookup = {
+      'citation': 'Needs citations',
+      'article': 'Needs biography',
+      'edit': 'Needs edit',
+      'image': 'Needs image',
+      'complete': 'Complete!'
+    };
+
+    filter.addEventListener('change', function (e) {
+      var chosen = filter.options[filter.selectedIndex].value;
+
+      if (chosen !== 'all') {
+        var refresh = obj.data.filter(function (d) {
+          return d[2] === lookup[chosen];
+        });
+
+        grid.updateConfig({
+          data: refresh
+        }).forceRender();
+      } else {
+        grid.updateConfig({
+          data: obj.data
+        }).forceRender();
+      }
+    });
   }
 }
 

@@ -23,9 +23,8 @@ function displayTable(err, res) {
   } else {
     const { data } = res;
 
-    console.log('res', res);
-
     const table = select('#my-table');
+    const filter = select('.table-filter');
 
     const tableKeys = ['Name', 'link', 'Status'];
     const tableHeaders = ['Journalist', 'Next step'];
@@ -40,7 +39,7 @@ function displayTable(err, res) {
       obj.data.push(outRow);
     });
 
-    console.log(obj.data[1]);
+    // console.log(obj.data[1]);
 
     const grid = new Grid({
       columns: [
@@ -52,14 +51,15 @@ function displayTable(err, res) {
           name: 'link',
           hidden: true
         },
-        {
-          name: 'Status',
-          formatter: (cell) => cell
-        },
+        'Status'
       ],
       data: obj.data,
       pagination: true,
       search: true,
+      className: {
+        td: 'my-custom-td-class',
+        table: 'custom-table-classname'
+      }
     })
 
     grid.render(table);
@@ -70,6 +70,33 @@ function displayTable(err, res) {
     //     { select: 2, render: renderLink },
     //   ]
     // });
+
+    const lookup = {
+      'citation': 'Needs citations',
+      'article': 'Needs biography',
+      'edit': 'Needs edit',
+      'image': 'Needs image',
+      'complete': 'Complete!',
+    }
+
+    filter.addEventListener('change', e => {
+      const chosen = filter.options[filter.selectedIndex].value;
+
+      if (chosen !== 'all') {
+        let refresh = obj.data.filter(d => d[2] === lookup[chosen]);
+
+        grid.updateConfig({
+          data: refresh,
+        })
+        .forceRender();
+
+      } else {
+        grid.updateConfig({
+          data: obj.data,
+        })
+        .forceRender();
+      }
+    });
   }
 }
 
