@@ -55,7 +55,7 @@ function displayTable(err, res) {
       columns: [
         {
           name: 'Name',
-          formatter: (_, row) => html(`<a class='journo-name' href=${row.cells[1].data} target='_blank' rel='noopener noreferrer'>${row.cells[0].data}</a>`)
+          formatter: (_, row) => html(`<a class='journo-name' href=${row.cells[1].data} target='_parent' rel='noopener noreferrer'>${row.cells[0].data}</a>`)
         },
         {
           name: 'link',
@@ -86,6 +86,7 @@ function displayTable(err, res) {
     })
 
     grid.render(table);
+    pymChild.sendHeight();
 
     const search = select('.gridjs-search-input');
     search.placeholder = 'Search for a name...';
@@ -114,6 +115,8 @@ function displayTable(err, res) {
           data: obj.data,
         })
         .forceRender();
+
+        pymChild.sendHeight();
       }
     });
   }
