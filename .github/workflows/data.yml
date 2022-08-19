@@ -1,0 +1,51 @@
+name: Pull data
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '*/6 * * * *' # Every 6 minutes. Ref https://crontab.guru/examples.html
+  
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      
+      - name: Set up configurations
+        shell: bash
+        run: echo -n "${{ secrets.SHEET_KEY }}" | base64 --decode > key.json
+
+      - name: Install 
+        run: npm install
+
+      - name: Get spreadsheet data
+        run: node ./pullData.js
+        
+      - name: Commit and push if it changed
+        run: |-
+          git config user.name "Automated"
+          git config user.email "actions@users.noreply.github.com"
+          git add src/assets/data.json
+          timestamp=$(date -u)
+          git commit -m "Latest data: ${timestamp}" || exit 0
+          git push origin HEAD
+
+      - name: Build app
+        run: npm run build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          exclude_assets: '.github'
