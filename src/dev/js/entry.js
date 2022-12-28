@@ -11,15 +11,14 @@ window.enterView = (msg) => {
   console.log('enter-view', msg);
 };
 
-// const renderLink = link => `<a href=${link} target='_blank' rel='noopener noreferrer'>Click here to edit on Wikipedia</a>`;
-
 const renderLink = (_, row) => {
-  console.log(row);
+  const link = row.cells[1].data;
+  return html(`
+    <a class="journo-name" href="${link}" target="_parent" rel="noopener noreferrer">${row.cells[0].data}</a>`
+  )
 }
 
 const renderTag = (cell) => {
-  console.log(cell);
-
   const c = cell.toLowerCase()
     .replace(' ', '-')
     .replace('!', '');
@@ -49,13 +48,11 @@ function displayTable(err, res) {
       obj.data.push(outRow);
     });
 
-    // console.log(obj.data[1]);
-
     const grid = new Grid({
       columns: [
         {
           name: 'Name',
-          formatter: (_, row) => html(`<a class='journo-name' href=${row.cells[1].data} target='_parent' rel='noopener noreferrer'>${row.cells[0].data}</a>`)
+          formatter: renderLink,
         },
         {
           name: 'link',

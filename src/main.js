@@ -89,15 +89,12 @@ window.enterView = function (msg) {
   console.log('enter-view', msg);
 };
 
-// const renderLink = link => `<a href=${link} target='_blank' rel='noopener noreferrer'>Click here to edit on Wikipedia</a>`;
-
 var renderLink = function renderLink(_, row) {
-  console.log(row);
+  var link = row.cells[1].data;
+  return (0, _gridjs.html)('\n    <a class="journo-name" href="' + link + '" target="_parent" rel="noopener noreferrer">' + row.cells[0].data + '</a>');
 };
 
 var renderTag = function renderTag(cell) {
-  console.log(cell);
-
   var c = cell.toLowerCase().replace(' ', '-').replace('!', '');
 
   return (0, _gridjs.html)('<span class=\'need-tag ' + c + '\'>' + cell + '</span>');
@@ -128,14 +125,10 @@ function displayTable(err, res) {
       obj.data.push(outRow);
     });
 
-    // console.log(obj.data[1]);
-
     var grid = new _gridjs.Grid({
       columns: [{
         name: 'Name',
-        formatter: function formatter(_, row) {
-          return (0, _gridjs.html)('<a class=\'journo-name\' href=' + row.cells[1].data + ' target=\'_parent\' rel=\'noopener noreferrer\'>' + row.cells[0].data + '</a>');
-        }
+        formatter: renderLink
       }, {
         name: 'link',
         hidden: true
