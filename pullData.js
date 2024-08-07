@@ -1,14 +1,13 @@
-const { sheetToData } = require('@newswire/sheet-to-data');
+/* eslint-disable no-param-reassign */
 const { google } = require('googleapis');
-const os = require('os');
 const fs = require('fs');
-const path = require('path');
+
 const keyFile = 'key.json';
 const spreadsheetId = [
   '1ovvSRIWi8ohQBZxDC-1770sF0aKfZ5M3R9yuhcjs04o',
 ];
 // const ranges = ['Assignments!B2:C'];
-const ranges = ['Articles data!A1:AB']
+const ranges = ['Articles data!A1:AB'];
 const outFileNames = ['data.json'];
 
 // https://github.com/rdmurphy/sheet-to-data/blob/master/index.js
@@ -19,7 +18,8 @@ function zipObject(keys, values) {
     if (values) {
       result[key] = values[i];
     } else {
-      result[key[0]] = key[1];
+      const [k, v] = key;
+      result[k] = v;
     }
   });
 
@@ -27,14 +27,14 @@ function zipObject(keys, values) {
 }
 
 function selectData(json) {
-  const reqKeys = ['Enter name Wikipedia article - DO NOT REORDER', 'Claimed by', 'Link to edit', 'needs article?', 'needs edit?', 'Needs more independent citations (mark TRUE)', 'Needs headshot (mark TRUE)', 'ORES rating', 'link'];
+  const reqKeys = ['Enter name for Wikipedia article - DO NOT REORDER', 'Enter starting ORES rating', 'Link to edit', 'Needs more independent citations (mark TRUE)', 'Needs headshot (mark TRUE)', 'current revid', 'enwiki article quality', 'link', 'Wikidata Q', 'created?', 'improved?', 'needs article?', 'needs edit?', 'enwiki damaging'];
 
-  const renamedKeys = ['Name of journalist', 'Claimed by', 'Link to edit', 'Needs article', 'Needs edit', 'Needs citation', 'Needs photo', 'rating', 'link'];
+  const renamedKeys = ['Name of journalist', 'rating', 'Link to edit', 'Needs citation', 'Needs headshot', 'current revid', 'enwiki article quality', 'link', 'Wikidata Q', 'created?', 'improved?', 'needs article?', 'needs edit?', 'enwiki damaging'];
 
   const selectedJson = [];
 
-  json.forEach(r => {
-    let obj = {}
+  json.forEach((r) => {
+    const obj = {};
 
     reqKeys.forEach((k, i) => {
       obj[renamedKeys[i]] = r[k];
@@ -47,17 +47,17 @@ function selectData(json) {
 }
 
 function reshapeData(rows) {
-  rows.forEach(d => {
+  rows.forEach((d) => {
     d.Name = d['Name of journalist'];
     d.link = d['Link to edit'];
 
-    if(d['Needs citation'] == 'TRUE') {
-      d.Status = 'Needs citations'
-    } else if (d['Needs article'] == 'TRUE') {
+    if (d['Needs citation'] === 'TRUE') {
+      d.Status = 'Needs citations';
+    } else if (d['Needs article'] === 'TRUE') {
       d.Status = 'Needs biography';
-    } else if (d['Needs edit'] == 'TRUE') {
+    } else if (d['Needs edit'] === 'TRUE') {
       d.Status = 'Needs edit';
-    } else if (d['Needs photo'] == 'TRUE') {
+    } else if (d['Needs photo'] === 'TRUE') {
       d.Status = 'Needs image';
     } else {
       d.Status = 'Complete!';
@@ -80,7 +80,7 @@ async function main() {
   // this method looks for the GCLOUD_PROJECT and GOOGLE_APPLICATION_CREDENTIALS
   // environment variables to establish authentication
   const auth = await google.auth.getClient({
-    keyFile: keyFile,
+    keyFile,
     scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
   });
 
@@ -90,9 +90,8 @@ async function main() {
     auth,
   });
 
-  for (let i = 0; i < spreadsheetId.length; i++) {
-    console.log(spreadsheetId[i]);
-
+  for (let i = 0; i < spreadsheetId.length; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
     const results = await sheets.spreadsheets.values.get({
       spreadsheetId: spreadsheetId[i],
       range: ranges[i],
@@ -106,12 +105,11 @@ async function main() {
     let data = selectData(rows.slice(1)
       .map(values => zipObject(headers, values)));
 
-    data = reshapeData(data)
+    data = reshapeData(data);
 
-    const fp = 'src/assets/' + outFileNames[i];
-    // console.log(rows[0])
+    const fp = `src/assets/${outFileNames[i]}`;
     fs.writeFileSync(fp, JSON.stringify({ data }));
   }
 }
 
-main().catch(console.error);
+main().catch(err => console.error(err));
